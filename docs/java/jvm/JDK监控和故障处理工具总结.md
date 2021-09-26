@@ -1,5 +1,3 @@
-点击关注[公众号](#公众号)及时获取笔主最新更新文章，并可免费领取本文档配套的《Java面试突击》以及Java工程师必备学习资源。
-
 <!-- TOC -->
 
 - [JDK 监控和故障处理工具总结](#jdk-监控和故障处理工具总结)
@@ -26,12 +24,12 @@
 
 这些命令在 JDK 安装目录下的 bin 目录下：
 
-- **`jps`** (JVM Process Status）: 类似 UNIX 的 `ps` 命令。用户查看所有 Java 进程的启动类、传入参数和 Java 虚拟机参数等信息；
-- **`jstat`**（ JVM Statistics Monitoring Tool）:  用于收集 HotSpot 虚拟机各方面的运行数据;
-- **`jinfo`** (Configuration Info for Java) : Configuration Info forJava,显示虚拟机配置信息;
-- **`jmap`** (Memory Map for Java) :生成堆转储快照;
-- **`jhat`** (JVM Heap Dump Browser ) : 用于分析 heapdump 文件，它会建立一个 HTTP/HTML 服务器，让用户可以在浏览器上查看分析结果;
-- **`jstack`** (Stack Trace for Java):生成虚拟机当前时刻的线程快照，线程快照就是当前虚拟机内每一条线程正在执行的方法堆栈的集合。
+- **`jps`** (JVM Process Status）: 类似 UNIX 的 `ps` 命令。用于查看所有 Java 进程的启动类、传入参数和 Java 虚拟机参数等信息；
+- **`jstat`**（JVM Statistics Monitoring Tool）:  用于收集 HotSpot 虚拟机各方面的运行数据;
+- **`jinfo`** (Configuration Info for Java) : Configuration Info for Java,显示虚拟机配置信息;
+- **`jmap`** (Memory Map for Java) : 生成堆转储快照;
+- **`jhat`** (JVM Heap Dump Browser) : 用于分析 heapdump 文件，它会建立一个 HTTP/HTML 服务器，让用户可以在浏览器上查看分析结果;
+- **`jstack`** (Stack Trace for Java) : 生成虚拟机当前时刻的线程快照，线程快照就是当前虚拟机内每一条线程正在执行的方法堆栈的集合。
 
 ### `jps`:查看所有 Java 进程
 
@@ -83,14 +81,14 @@ jstat -<option> [-t] [-h<lines>] <vmid> [<interval> [<count>]]
 - `jstat -gccapacity vmid` ：显示各个代的容量及使用情况；
 - `jstat -gcnew vmid` ：显示新生代信息；
 - `jstat -gcnewcapcacity vmid` ：显示新生代大小与使用情况；
-- `jstat -gcold vmid` ：显示老年代和永久代的信息；
+- `jstat -gcold vmid` ：显示老年代和永久代的行为统计，从jdk1.8开始,该选项仅表示老年代，因为永久代被移除了；
 - `jstat -gcoldcapacity vmid` ：显示老年代的大小；
-- `jstat -gcpermcapacity vmid` ：显示永久代大小；
+- `jstat -gcpermcapacity vmid` ：显示永久代大小，从jdk1.8开始,该选项不存在了，因为永久代被移除了；
 - `jstat -gcutil vmid` ：显示垃圾收集信息；
 
 另外，加上 `-t`参数可以在输出信息上加一个 Timestamp 列，显示程序的运行时间。
 
-### ` jinfo`: 实时地查看和调整虚拟机各项参数
+### `jinfo`: 实时地查看和调整虚拟机各项参数
 
 `jinfo vmid` :输出当前 jvm 进程的全部参数和系统属性 (第一部分是系统的属性，第二部分是 JVM 的参数)。
 
@@ -264,7 +262,7 @@ JConsole 是基于 JMX 的可视化监视、管理工具。可以很方便的监
 
 #### 连接 Jconsole
 
-![连接 Jconsole](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/1JConsole连接.png)
+![连接 Jconsole](./pictures/jdk监控和故障处理工具总结/1JConsole连接.png)
 
 如果需要使用 JConsole 连接远程进程，可以在远程 Java 程序启动时加上下面这些参数:
 
@@ -283,7 +281,7 @@ JConsole 是基于 JMX 的可视化监视、管理工具。可以很方便的监
 
 #### 查看 Java 程序概况
 
-![查看 Java 程序概况 ](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/2查看Java程序概况.png)
+![查看 Java 程序概况 ](./pictures/jdk监控和故障处理工具总结/2查看Java程序概况.png)
 
 #### 内存监控
 
@@ -294,7 +292,7 @@ JConsole 可以显示当前内存的详细信息。不仅包括堆内存/非堆�
 > - **新生代 GC（Minor GC）**:指发生新生代的的垃圾收集动作，Minor GC 非常频繁，回收速度一般也比较快。
 > - **老年代 GC（Major GC/Full GC）**:指发生在老年代的 GC，出现了 Major GC 经常会伴随至少一次的 Minor GC（并非绝对），Major GC 的速度一般会比 Minor GC 的慢 10 倍以上。
 
-![内存监控 ](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/3内存监控.png)
+![内存监控 ](./pictures/jdk监控和故障处理工具总结/3内存监控.png)
 
 #### 线程监控
 
@@ -302,7 +300,7 @@ JConsole 可以显示当前内存的详细信息。不仅包括堆内存/非堆�
 
 最下面有一个"检测死锁 (D)"按钮，点击这个按钮可以自动为你找到发生死锁的线程以及它们的详细信息 。
 
-![线程监控 ](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/4线程监控.png)
+![线程监控 ](./pictures/jdk监控和故障处理工具总结/4线程监控.png)
 
 ### Visual VM:多合一故障处理工具
 
@@ -325,13 +323,3 @@ VisualVM 提供在 Java 虚拟机 (Java Virutal Machine, JVM) 上运行的 Java 
 
 - <https://visualvm.github.io/documentation.html>
 - <https://www.ibm.com/developerworks/cn/java/j-lo-visualvm/index.html>
-
-## 公众号
-
-如果大家想要实时关注我更新的文章以及分享的干货的话，可以关注我的公众号。
-
-**《Java面试突击》:** 由本文档衍生的专为面试而生的《Java面试突击》V2.0 PDF 版本公众号后台回复 **"Java面试突击"** 即可免费领取！
-
-**Java工程师必备学习资源:** 一些Java工程师常用学习资源公众号后台回复关键字 **“1”** 即可免费无套路获取。 
-
-![我的公众号](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/167598cd2e17b8ec.png)
